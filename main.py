@@ -22,8 +22,23 @@ class Ui_MainWindow(object):
         self.pushButton.clicked.connect(self.convert)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)        
 
-    def convert(self):
+    state = 0
+
+    def encrypt(self,c):
+        return c
+
+    def rotate(self):
         pass
+
+    def convert(self):
+        cipher = ''
+        plain = self.plainTextEdit.toPlainText()
+        for c in plain:
+            self.state += 1
+            cipher += self.encrypt(c)
+            self.rotate()
+        self.plainTextEdit.clear()
+        self.plainTextEdit.appendPlainText(cipher)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
