@@ -2,9 +2,9 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 
 String = r'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789{}[]()<>/\!@#$%^&_-=+* '
 
-r1 = r'okE(5PW{!wn^3 L/Gi2m]081h=CdA\JQ+eF%Bt9&UxYl6>c-uZs)fr#ypNSgOX7V$IK@M*Tz_4aHD[<Rjqb}v'
-r2 = r'nI 9b1{ChxmOjDSWBJy<7Q6#@cs3V>dlt*80zeuk[]H4)PKRgNM&o_G2va!(pY+T/A$qXf=^%i\E-}5LUZrFw'
-r3 = r'aG(m\UMIqS*t9]0 h$AF%ONR2D_1vd5[^VieP)f8Hw3o/CzKZ-}EL={sQWJr6!7kTpu@ncgx+#jBlYyX><b4&'
+r11 = r'okE(5PW{!wn^3 L/Gi2m]081h=CdA\JQ+eF%Bt9&UxYl6>c-uZs)fr#ypNSgOX7V$IK@M*Tz_4aHD[<Rjqb}v'
+r22 = r'nI 9b1{ChxmOjDSWBJy<7Q6#@cs3V>dlt*80zeuk[]H4)PKRgNM&o_G2va!(pY+T/A$qXf=^%i\E-}5LUZrFw'
+r33 = r'aG(m\UMIqS*t9]0 h$AF%ONR2D_1vd5[^VieP)f8Hw3o/CzKZ-}EL={sQWJr6!7kTpu@ncgx+#jBlYyX><b4&'
 
 
 class Ui_MainWindow(object):
@@ -42,7 +42,6 @@ class Ui_MainWindow(object):
         return c1
 
     def rotate(self):
-        print(self.state)
         global r1 , r2 , r3
         r1 = r1[1:] + r1[0]
         if self.state % 26 :
@@ -50,9 +49,17 @@ class Ui_MainWindow(object):
         if self.state % 676 :
             r3 = r3[1:] + r3[0]
 
+    def reset(self):
+        global r1 , r2 , r3
+        r1 = r11
+        r2 = r22
+        r3 = r33
+        self.state = 0
+
     def convert(self):
-        cipher = ''
+        self.reset()
         plain = self.plainTextEdit.toPlainText()
+        cipher = ''
         for c in plain:
             self.state += 1
             cipher += self.encrypt(c)
