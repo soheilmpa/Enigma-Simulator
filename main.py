@@ -1,7 +1,13 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
+from time import localtime
+
+# year , month , day , hour
+y = int(str(localtime()[0])[2:]) 
+m = localtime()[1]
+d = localtime()[2]
+h = localtime()[3]
 
 String = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789[]()<>/!@#$^&_-=+* '
-
 R1 = '[ZuO(/#azs_hiTe]X<vrM)!SAQ^y6I3kFmU$EYj*N> 2l7t&1BR9fgw@5VDJn-K4L8Cq=oGbxpdcHP0W+'
 R2 = 'TMkJXwIZlh5)Wj=uB_sLo1@f*FDHS4Ctr&Q-2RAd0KqmcV>8!GNzaU(/x[ep9+ n6PvYOyb]i3g$<7#E^'
 R3 = 'XoQ9*SDr_1]JGdgZi0w>OheMRq@E2lmzpxv#f7VF4!cLYj38[W($CA5-^sPI+/a)HNKky<6BbnUut =&T'
@@ -12,6 +18,28 @@ R5 = '<4K=f)a(jkCTIHn-g3ov8lqbPXVzNOLc/FmruYJ!yZ[s6d1p25*tB&h]GR_D$9i^>@70 WxQ#w
 # r11 = 'ضصشسظطثقیبزرفغلاذدعهتنپوخحمک./جچ گ'
 # r22 = 'چجحخهعغفقثصضشسیبلاتنمکگ/.وپدذ رزطظ'
 # r33 = 'گکمنتالبیسشضصثقفغعدذرزطظپهوخ. ح/جچ'
+
+def set_rotors(start):
+    file = open('./rotors.txt','r')
+    file = file.readlines()
+    R1 = file[start + m*m + h]
+    R2 = file[start + m*m + d]
+    R3 = file[start + m*m + m]
+    R4 = file[start + m*m + m + h]
+    R5 = file[start + y + 2m + d + h]
+
+
+
+
+file = open('./rotors.txt','r')
+file = file.readlines()
+r1 = file[0]
+r2 = file[1]
+r3 = file[2]
+r4 = file[3]
+r5 = file[4]
+
+
 
 print(len(String))
 
