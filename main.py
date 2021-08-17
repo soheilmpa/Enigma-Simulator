@@ -7,73 +7,90 @@ m = localtime()[1]
 d = localtime()[2]
 h = localtime()[3]
 
-String = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789[]()<>/!@#$^&_-=+* '
-R1 = '[ZuO(/#azs_hiTe]X<vrM)!SAQ^y6I3kFmU$EYj*N> 2l7t&1BR9fgw@5VDJn-K4L8Cq=oGbxpdcHP0W+'
-R2 = 'TMkJXwIZlh5)Wj=uB_sLo1@f*FDHS4Ctr&Q-2RAd0KqmcV>8!GNzaU(/x[ep9+ n6PvYOyb]i3g$<7#E^'
-R3 = 'XoQ9*SDr_1]JGdgZi0w>OheMRq@E2lmzpxv#f7VF4!cLYj38[W($CA5-^sPI+/a)HNKky<6BbnUut =&T'
-R4 = '<4K=f)a(jkCTIHn-g3ov8lqbPXVzNOLc/FmruYJ!yZ[s6d1p25*tB&h]GR_D$9i^>@70 WxQ#wAUS+EeM'
-R5 = '<4K=f)a(jkCTIHn-g3ov8lqbPXVzNOLc/FmruYJ!yZ[s6d1p25*tB&h]GR_D$9i^>@70 WxQ#wAUS+EeM'
-
-# String='ظطزرذدپو./گکمنتالبیسشضصثقفغع هخحجچ'
-# r11 = 'ضصشسظطثقیبزرفغلاذدعهتنپوخحمک./جچ گ'
-# r22 = 'چجحخهعغفقثصضشسیبلاتنمکگ/.وپدذ رزطظ'
-# r33 = 'گکمنتالبیسشضصثقفغعدذرزطظپهوخ. ح/جچ'
-
-def set_rotors(start):
-    file = open('./rotors.txt','r')
-    file = file.readlines()
-    R1 = file[start + m*m + h]
-    R2 = file[start + m*m + d]
-    R3 = file[start + m*m + m]
-    R4 = file[start + m*m + m + h]
-    R5 = file[start + y + 2m + d + h]
-
-
-
-
-file = open('./rotors.txt','r')
-file = file.readlines()
-r1 = file[0]
-r2 = file[1]
-r3 = file[2]
-r4 = file[3]
-r5 = file[4]
-
-
-
-print(len(String))
-
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.setFixedWidth(580)
-        MainWindow.setFixedHeight(300)
+        MainWindow.setFixedWidth(465)
+        MainWindow.setFixedHeight(273)
+
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
 
-        self.pushButton = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton.setGeometry(QtCore.QRect(0, 0, 580, 30))
-        self.pushButton.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
-        self.pushButton.setObjectName("pushButton")
+        self.plainText = QtWidgets.QPlainTextEdit(self.centralwidget)
+        self.plainText.setGeometry(QtCore.QRect(2, 30, 461, 241))
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        self.plainText.setFont(font)
+        self.plainText.setObjectName("plainText")
 
-        self.plainTextEdit = QtWidgets.QPlainTextEdit(self.centralwidget)
-        self.plainTextEdit.setGeometry(QtCore.QRect(0, 30, 580, 270))
-        self.plainTextEdit.setObjectName("plainTextEdit")
+        self.change_language = QtWidgets.QPushButton(self.centralwidget)
+        self.change_language.setGeometry(QtCore.QRect(2, 0, 187, 28))
+        font.setPointSize(12)
+        font.setBold(True)
+        font.setWeight(75)
+        self.change_language.setFont(font)
+        self.change_language.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        self.change_language.setObjectName("change_language")
+
+        self.convert = QtWidgets.QPushButton(self.centralwidget)
+        self.convert.setGeometry(QtCore.QRect(282, 0, 181, 28))
+        font.setPointSize(12)
+        font.setBold(True)
+        font.setWeight(75)
+        self.convert.setFont(font)
+        self.convert.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        self.convert.setObjectName("convert")
+
+        self.language = QtWidgets.QLabel(self.centralwidget)
+        self.language.setGeometry(QtCore.QRect(202, 0, 71, 31))
+        font.setPointSize(12)
+        self.language.setFont(font)
+        self.language.setAlignment(QtCore.Qt.AlignCenter)
+        self.language.setObjectName("language")
+
         MainWindow.setCentralWidget(self.centralwidget)
-
         self.retranslateUi(MainWindow)
-        self.pushButton.clicked.connect(self.convert)
-        QtCore.QMetaObject.connectSlotsByName(MainWindow)        
+        self.convert.clicked.connect(self.convert_f)
+        self.change_language.clicked.connect(self.change_language_f)
+        QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
+    start_line = 0
     state = 0
+    # eng = """abcdefghijklmnopqrstuvwxyz'ABCDEFGHIJKLMNOPQRSTUVWXYZ"0123456789[]()<>/?!@#$^&_;:-=+* """
+    # fa = """ضصثقفغعهخحجچگکمنتالبیسشظطزرذدپو۱۲۳۴۵۶۷۸۹۰0123456789[](")<'>/?!@#$^&_;:-=+ *"""
 
-    def encrypt(self,c):
+    eng = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 "
+    fa = "ضصثقفغعهخحجچگکمنتالبیسشظطزرذدپو۱۲۳۴۵۶۷۸۹۰0123456789 "
+
+
+    def change_language_f(self):
+        if self.start_line==180:
+            self.language.setText('English')
+            self.start_line=0
+        else :
+            self.language.setText('Persian')
+            self.start_line=180
+
+
+    def set_rotors(self,start):
+        global R1 , R2 , R3 , R4 , R5
+        f = open('./rotors.txt','r')
+        file = f.readlines()
+        R1 = file[start + m*m + h]
+        R2 = file[start + m*m + d]
+        R3 = file[start + m*m + m]
+        R4 = file[start + m*m + m + h]
+        R5 = file[start + y + 2*m + d + h]
+        f.close()
+
+
+    def encrypt(self,c,String,length):
         c1 = r1[String.find(c)]
         c2 = r2[String.find(c1)]
         c3 = r3[String.find(c2)]
         c4 = r4[String.find(c3)]
-        c5 = r5[String.find(c5)]
-        reflected = String[81-String.find(c5)]
+        c5 = r5[String.find(c4)]
+        reflected = String[length-String.find(c5)]
         c5 = String[r5.find(reflected)]
         c4 = String[r4.find(c5)]
         c3 = String[r3.find(c4)]
@@ -98,22 +115,33 @@ class Ui_MainWindow(object):
         r1 , r2 , r3 , r4 , r5 = R1 , R2 , R3 , R4 , R5
         self.state = 0
 
-    def convert(self):
+    def convert_f(self):
+        if h != localtime()[3] :
+            self.set_rotors(start_line)
         self.reset()
-        plain = self.plainTextEdit.toPlainText()
+        plain = self.plainText.toPlainText()
         cipher = ''
         for c in plain:
             self.state += 1
-            cipher += self.encrypt(c)
+            if self.start_line==0:
+                cipher += self.encrypt(c,self.eng,85)
+            else:
+                cipher += self.encrypt(c,self.fa,74)
             self.rotate()
-        self.plainTextEdit.clear()
-        self.plainTextEdit.appendPlainText(cipher)
+        self.plainText.clear()
+        self.plainText.appendPlainText(cipher)
+
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "Enigma"))
-        self.pushButton.setText(_translate("MainWindow", "Convert"))
-        self.plainTextEdit.setPlaceholderText(_translate("MainWindow", " text"))
+        self.plainText.setPlainText(_translate("MainWindow", ""))
+        self.plainText.setPlaceholderText(_translate("MainWindow", " text"))
+        self.change_language.setText(_translate("MainWindow", "Change language"))
+        self.convert.setText(_translate("MainWindow", "Convert"))
+        self.language.setText(_translate("MainWindow", "English"))
+
+
 
 if __name__ == "__main__":
     import sys
@@ -121,5 +149,6 @@ if __name__ == "__main__":
     MainWindow = QtWidgets.QMainWindow()
     ui = Ui_MainWindow()
     ui.setupUi(MainWindow)
+    ui.set_rotors(ui.start_line)
     MainWindow.show()
     sys.exit(app.exec_())
