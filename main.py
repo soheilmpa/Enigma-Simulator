@@ -54,34 +54,42 @@ class Ui_MainWindow(object):
         self.change_language.clicked.connect(self.change_language_f)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
+
+
     start_line = 0
     state = 0
-    # eng = """abcdefghijklmnopqrstuvwxyz'ABCDEFGHIJKLMNOPQRSTUVWXYZ"0123456789[]()<>/?!@#$^&_;:-=+* """
-    # fa = """ضصثقفغعهخحجچگکمنتالبیسشظطزرذدپو۱۲۳۴۵۶۷۸۹۰0123456789[](")<'>/?!@#$^&_;:-=+ *"""
-
     eng = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 "
     fa = "ضصثقفغعهخحجچگکمنتالبیسشظطزرذدپو۱۲۳۴۵۶۷۸۹۰0123456789 "
 
 
+
     def change_language_f(self):
+        global h , d , m , y
         if self.start_line==180:
             self.language.setText('English')
             self.start_line=0
         else :
             self.language.setText('Persian')
             self.start_line=180
+        y = int(str(localtime()[0])[2:]) 
+        m = localtime()[1]
+        d = localtime()[2]
+        h = localtime()[3]
+        self.set_rotors(self.start_line)
+
 
 
     def set_rotors(self,start):
         global R1 , R2 , R3 , R4 , R5
         f = open('./rotors.txt','r')
         file = f.readlines()
-        R1 = file[start + m*m + h]
-        R2 = file[start + m*m + d]
-        R3 = file[start + m*m + m]
-        R4 = file[start + m*m + m + h]
-        R5 = file[start + y + 2*m + d + h]
+        R1 = file[start + m*m + h].replace('\n', '')
+        R2 = file[start + m*m + d].replace('\n', '')
+        R3 = file[start + m*m + m].replace('\n', '')
+        R4 = file[start + m*m + m + h].replace('\n', '')
+        R5 = file[start + y + 2*m + d + h].replace('\n', '')
         f.close()
+
 
 
     def encrypt(self,c,String,length):
@@ -98,6 +106,8 @@ class Ui_MainWindow(object):
         c1 = String[r1.find(c2)]
         return c1
 
+
+
     def rotate(self):
         global r1 , r2 , r3 , r4 , r5
         r1 = r1[1:] + r1[0]
@@ -110,26 +120,29 @@ class Ui_MainWindow(object):
         if self.state % 500 :
             r5 = r5[1:] + r5[0]
 
+
+
     def reset(self):
         global r1 , r2 , r3 , r4 , r5
         r1 , r2 , r3 , r4 , r5 = R1 , R2 , R3 , R4 , R5
         self.state = 0
 
+
+
     def convert_f(self):
-        if h != localtime()[3] :
-            self.set_rotors(start_line)
         self.reset()
         plain = self.plainText.toPlainText()
         cipher = ''
         for c in plain:
             self.state += 1
             if self.start_line==0:
-                cipher += self.encrypt(c,self.eng,85)
+                cipher += self.encrypt(c,self.eng,61)
             else:
-                cipher += self.encrypt(c,self.fa,74)
+                cipher += self.encrypt(c,self.fa,50)
             self.rotate()
         self.plainText.clear()
         self.plainText.appendPlainText(cipher)
+
 
 
     def retranslateUi(self, MainWindow):
@@ -149,6 +162,6 @@ if __name__ == "__main__":
     MainWindow = QtWidgets.QMainWindow()
     ui = Ui_MainWindow()
     ui.setupUi(MainWindow)
-    ui.set_rotors(ui.start_line)
+    ui.change_language_f()
     MainWindow.show()
     sys.exit(app.exec_())
