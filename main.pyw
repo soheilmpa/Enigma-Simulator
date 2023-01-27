@@ -82,9 +82,9 @@ class Ui_MainWindow(object):
     def set_rotors(self,start):
         global R1 , R2 , R3 , R4 , R5
         try :
-            f = open('./rotors','r')
+            f = open('./rotors.txt','r')
         except :
-            f = open(r'.\rotors','r')
+            f = open(r'.\rotors.txt','r')
         file = f.readlines()
         R1 = file[start + m*m + h].replace('\n', '')
         R2 = file[start + m*m + d].replace('\n', '')
